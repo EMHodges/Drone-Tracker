@@ -1,0 +1,45 @@
+import time       # so that the stepper motor waits
+from itertools import cycle
+from microbit import *
+
+def main():
+
+   direction = (right,left)
+   myIterator = cycle(direction)   # when called this will change direction from right to left on a loop
+   choice = right
+
+   while True:       
+       signal = pin2.read_digital()  # input signal from the aerial
+       if signal == 0:
+           wait()
+           continue
+       else:
+           choice()
+           signal2 = pin2.read_digital()        
+           if signal2 > signal:
+               choice = next(myIterator)
+           elif signal2 == 0:
+               choice = wait
+               continue
+           else:
+               continue
+
+def right():
+   pin0.write_digital(1)  # turns the stepper motor right
+   sleep(1)
+   pin0.write_digital(0)
+   return
+
+def left():
+   pin1.write_digital(0)  # pin1 is the direction pin, here the direction has changed as the current is going 0 to 
+                                      # 1 instead of 1 to 0.
+   sleep(1)
+   pin1.write_digital(1)
+   return
+
+def wait():
+   time.sleep(1)
+   return
+
+main() # calls the main function automatically
+
